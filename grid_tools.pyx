@@ -826,7 +826,9 @@ cdef inline double inv_gcf_kaiser(double x, double dk, int W, double beta):
     c = (exp(temp) - exp(-1.*temp))/2./temp
     
     if temp1>temp2:
-        print "There is trouble"
+        temp = sqrt(temp1 - temp2)
+        c = -0.5*(exp(-1.*temp) - exp(temp))/temp
+#        print "There is trouble"
 
     return c
 
