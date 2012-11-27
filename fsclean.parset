@@ -1,0 +1,13 @@
+nphi = 400
+nra = 400
+ndec = 400
+cellsize = 0.10
+dphi = 5.0
+gain = 0.1
+niter = 5000
+cutoff = 5e-2
+bmaj = 8
+bmin = 8
+bpa = 0.
+bphi = 8
+verbosity = 0
