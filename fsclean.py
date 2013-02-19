@@ -92,7 +92,6 @@ class FSClean(object):
     # CLEAN algorithm types
     CLARK = 0
     HOGBOM = 1
-    clean_funcs = {CLARK: self.clark_clean, HOGBOM: self.hogbom_clean}
 
     def __init__(self, pm=None):
         """
@@ -172,6 +171,9 @@ class FSClean(object):
 
         """
 
+        clean_funcs = {self.CLARK: self.clark_clean,
+                       self.HOGBOM: self.hogbom_clean}
+
         self.ofnbase = outfn_base
         self.sfnbase = os.path.join(self.pm.parset['scratch_dir'],
                                     os.path.basename(outfn_base))
@@ -227,8 +229,8 @@ class FSClean(object):
 
         # Hand off data to the appropriate CLEAN function
         #[cc, resim] = self.clark_clean(vis, weights, im, db)
-        [cc, resim] = self.clean_funcs[self.pm.clean_type](vis, weights,
-                                                           im, db)
+        [cc, resim] = clean_funcs[self.pm.parset['clean_type']](vis, weights,
+                                                                im, db)
 
         # Write images and CC list to disk
         self.m.message("Writing metadata to image files.", 2)
@@ -297,7 +299,7 @@ class FSClean(object):
 
         """
 
-        if self.do_clean and self.pm.clean_type == CLARK:
+        if self.do_clean and self.pm.parset['clean_type'] == self.CLARK:
             self.m.message("Computing Kinv", 3)
             temp = FSCData(self.sfnbase + '_tempdata.hdf5',
                            coords=weights.coords,
