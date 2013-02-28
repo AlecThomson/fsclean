@@ -145,7 +145,7 @@ def fsmovie(fn, mfn, vmin=None, vmax=None):
     for i in range(nframes):
 
         pl.figure()
-        pl.imshow(a[i, :, :], vmax=vmax, vmin=vmin)
+        pl.imshow(abs(a[i, :, :]), vmax=vmax, vmin=vmin)
         pl.title('Frame = ' + str(minframe + i * framestep))
         pl.colorbar()
 
@@ -194,7 +194,8 @@ def maxphiimage(fn, thresh):
     depth of the max of the polarized emission along each LOS.
 
     Args:
-        fn: File name of the
+        fn: File name of the source Faraday cube HDF5 file.
+        thresh: Brightness above which
     """
     pass
 
