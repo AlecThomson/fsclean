@@ -146,7 +146,9 @@ def fsmovie(fn, mfn, vmin=None, vmax=None):
 
         pl.figure()
         pl.imshow(abs(a[i, :, :]), vmax=vmax, vmin=vmin)
-        pl.title('Frame = ' + str(minframe + i * framestep))
+        pl.title('Faraday Spectrum, Pol. Intensity \n $\phi$=' +
+            str((i - nframes / 2) *
+            im_file.attrs['cdelt'][0]) + " rad/m$^2$")
         pl.colorbar()
 
         if i > 0:
@@ -195,7 +197,9 @@ def maxphiimage(fn, thresh):
 
     Args:
         fn: File name of the source Faraday cube HDF5 file.
-        thresh: Brightness above which
+        thresh: Max brightness along the line of sight must be above this value
+            in order to put a value in the map. Otherwise, the pixel will
+            be blank.
     """
     pass
 
