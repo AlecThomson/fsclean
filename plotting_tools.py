@@ -145,7 +145,7 @@ def fsmovie(fn, mfn, vmin=None, vmax=None):
     for i in range(nframes):
 
         pl.figure()
-        pl.imshow(a[i, :, :], vmax=cube_max, vmin=cube_min)
+        pl.imshow(a[i, :, :], vmax=vmax, vmin=vmin)
         pl.title('Frame = ' + str(minframe + i * framestep))
         pl.colorbar()
 
@@ -190,7 +190,11 @@ def find_max(dset, func):
 
 def maxphiimage(fn, thresh):
     """
-    A routine for making an
+    A routine for making an "RM image" from a Faraday cube. Reports the Faraday
+    depth of the max of the polarized emission along each LOS.
+
+    Args:
+        fn: File name of the
     """
     pass
 
