@@ -230,7 +230,7 @@ def maxphiimage(fn, thresh):
                 print "Unable to fit a Gaussian to the peak along LOS (" +\
                     str(i) + ", " + str(j) + ")"
                 pl.figure()
-                pl.plot(los)
+                pl.plot(abs(los))
                 pl.show()
 
                 raise
