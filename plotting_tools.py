@@ -133,13 +133,14 @@ def fsmovie(fn, mfn, vmin=None, vmax=None):
     """
 
     im_file = h5py.File(fn)
+    a = im_file[DATASET_STRING]
 
     if vmin is None:
         vmin = 0.
     if vmax is None:
-        vmax = find_max(im_file[DATASET_STRING], abs)
+        vmax = find_max(a, abs)
 
-    nframes = im_file[DATASET_STRING].shape[0]
+    nframes = a.shape[0]
 
     for i in range(nframes):
 
