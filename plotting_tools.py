@@ -300,7 +300,7 @@ def find_peak(im, thresh):
         xmax = popt[1]
         fwhms = popt[2] * 2.3548
     else:
-        return loc, val, -1.
+        return loc, -1.
 
     return xmax, fwhms
 
