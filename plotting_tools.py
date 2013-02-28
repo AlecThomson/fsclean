@@ -224,7 +224,7 @@ def maxphiimage(fn, thresh):
             #maxpix = np.argmax(abs(imslice[:, j]))
 
             los = imslice[:, j]
-            phimax, fwhm = find_peak(los, thresh)
+            maxpix, fwhm = find_peak(los, thresh)
 
             if fwhm < 0:
                 mask[i, j] = 1
