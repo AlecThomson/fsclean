@@ -216,8 +216,8 @@ def maxphiimage(fn, thresh):
     for i in range(shape[0]):
         imslice = a[:, i, :]
         for j in range(shape[1]):
-            maxval = max(abs(imslice[:, i, j]))
-            maxpix = np.argmax(abs(imslice[:, i, j]))
+            maxval = max(abs(imslice[:, j]))
+            maxpix = np.argmax(abs(imslice[:, j]))
 
             if maxval < thresh:
                 mask[i, j] = 1
