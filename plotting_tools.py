@@ -214,9 +214,10 @@ def maxphiimage(fn, thresh):
     myjet.set_bad('k')
 
     for i in range(shape[0]):
+        imslice = a[:, i, :]
         for j in range(shape[1]):
-            maxval = max(abs(a[:, i, j]))
-            maxpix = np.argmax(abs(a[:, i, j]))
+            maxval = max(abs(imslice[:, i, j]))
+            maxpix = np.argmax(abs(imslice[:, i, j]))
 
             if maxval < thresh:
                 mask[i, j] = 1
