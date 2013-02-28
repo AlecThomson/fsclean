@@ -201,7 +201,38 @@ def maxphiimage(fn, thresh):
             in order to put a value in the map. Otherwise, the pixel will
             be blank.
     """
-    pass
+
+    im_file = h5py.File(fn)
+    a = im_file[DATASET_STRING]
+
+    shape = (a.shape[1], a.shape[2])
+
+    mask = np.zeros(shape)
+    rmmap = np.zeros(shape)
+
+    myjet = pl.cm.jet
+    myjet.set_bad('k')
+
+    for i in range(shape[0]):
+        for j in range(shape[1]):
+            maxval = max(abs(a[:, i, j]))
+            maxpix = np.argmax(abs(a[:, i, j]))
+
+            if maxval < thresh:
+                mask[i, j] = 1
+
+            rmmap[i, j] = ((maxpix - a.shape[0] / 2) *
+                           im_file.attrs['cdelt'][0])
+
+        progress(20, i + 1, shape[0])
+
+    masked_array = np.ma.array(rmmap, mask=mask)
+    pl.imshow(masked_array, cmap=myjet)
+    pl.title("RM Map (values in rad/m$^2$)")
+    pl.colorbar()
+    pl.show()
+
+    return rmmap, mask
 
 
 def progress(width, part, whole):
