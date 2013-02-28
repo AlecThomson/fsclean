@@ -227,13 +227,8 @@ def maxphiimage(fn, thresh):
             try:
                 maxpix, fwhm = find_peak(los, thresh)
             except RuntimeError:
-                print "Unable to fit a Gaussian to the peak along LOS (" +\
-                    str(i) + ", " + str(j) + ")"
-                pl.figure()
-                pl.plot(abs(los))
-                pl.show()
-
-                raise
+                maxpix = np.argmax(abs(los))
+                fwhm = -1
 
             if fwhm < 0:
                 mask[i, j] = 1
