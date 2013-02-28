@@ -3,7 +3,7 @@ plotting_tools.py
 
 Utilities and scripts for procuding plots of Faraday spectra.
 
-**********************************************************************************
+******************************************************************************
 
 Copyright 2012 Michael Bell
 
@@ -22,7 +22,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with fsclean.  If not, see <http://www.gnu.org/licenses/>.
 
-**********************************************************************************
+******************************************************************************
 
 """
 
@@ -36,100 +36,177 @@ import h5py
 from pyrat import RAImage
 from pyrat.Constants import *
 import numpy as np
+import subprocess as sp
 
 cm = pl.cm.jet
 
-
 DATASET_STRING = RAImage.DATASET_STRING
 
-# Code snippet taken from
-# http://www.mail-archive.com/matplotlib-users@lists.sourceforge.net/msg03724.html
+# Code snippet for interactive plotting taken from
+# www.mail-archive.com/matplotlib-users@lists.sourceforge.net/msg03724.html
+
 
 class IndexTracker:
-   def __init__(self, ax, f, vmax):
-       self.ax = ax
+    """
+    """
 
-       self.f = f
-       self.X = f[DATASET_STRING]
-       self.slices,rows,cols = self.X.shape
-       self.ind  = self.slices/2
+    def __init__(self, ax, f, vmax):
+        """
+        """
+        self.ax = ax
 
-       self.ax.set_title('Faraday Spectrum, Pol. Intensity \n $\phi$='+\
-           str((self.ind-self.slices/2)\
-           *self.f.attrs['cdelt'][0])+" rad/m$^2$")
+        self.f = f
+        self.X = f[DATASET_STRING]
+        self.slices, rows, cols = self.X.shape
+        self.ind = self.slices / 2
 
-       self.im = ax.imshow(abs(self.X[self.ind,:,:]), origin='lower', cmap=cm, \
-           vmax=vmax)
-       self.ax.figure.colorbar(self.im)
-       xticks = self.ax.get_xticks()
-#       print xticks
-       labels = []
-       for i in range(len(xticks)):
-           labels += [5.*xticks[i]]
-       self.ax.set_xticklabels(labels)
-       self.update()
+        self.ax.set_title('Faraday Spectrum, Pol. Intensity \n $\phi$=' +
+            str((self.ind - self.slices / 2) *
+            self.f.attrs['cdelt'][0]) + " rad/m$^2$")
 
-   def onpress(self, event):
+        self.im = ax.imshow(abs(self.X[self.ind, :, :]), origin='lower',
+                           cmap=cm, vmax=vmax)
+        self.ax.figure.colorbar(self.im)
+        self.update()
 
-       if event.key=='right':
-           self.ind = np.clip(self.ind+1, 0, self.slices-1)
-       elif event.key=='left':
-           self.ind = np.clip(self.ind-1, 0, self.slices-1)
-           
-       self.update()
+    def onpress(self, event):
+        """
+        """
 
-   def update(self):
-       self.im.set_data(abs(self.X[self.ind,:,:]))
-#       self.ax.set_ylabel('slice %s'%self.ind)
-       self.ax.set_title('Faraday Spectrum, Pol. Intensity \n $\phi$='+\
-           str((self.ind-self.slices/2)\
-           *self.f.attrs['cdelt'][0])+" rad/m$^2$")
-       self.im.axes.figure.canvas.draw()
+        if event.key == 'right':
+            self.ind = np.clip(self.ind + 1, 0, self.slices - 1)
+        elif event.key == 'left':
+            self.ind = np.clip(self.ind - 1, 0, self.slices - 1)
 
+        self.update()
+
+    def update(self):
+        """
+        """
+        self.im.set_data(abs(self.X[self.ind, :, :]))
+        self.ax.set_title('Faraday Spectrum, Pol. Intensity \n $\phi$=' +
+                          str((self.ind - self.slices / 2) *
+                          self.f.attrs['cdelt'][0]) + " rad/m$^2$")
+        self.im.axes.figure.canvas.draw()
 
 
 def fsbrowser(fn, vmin=None, vmax=None):
     """
-    desc.
+    An interactive tool to move through a Faraday cube.
 
     Args:
-        
+
     Returns:
         Nothing
-    
+
     """
-    
+
     im_file = h5py.File(fn)
 
     fig = pl.figure()
     ax = fig.add_subplot(111)
-    
-    if vmin==None:
+
+    if vmin is None:
         vmin = 0.
-    if vmax==None:
+    if vmax is None:
         vmax = find_max(im_file[DATASET_STRING], abs)
-    
+
     tracker = IndexTracker(ax, im_file, vmax)
-    
+
     fig.canvas.mpl_connect('key_press_event', tracker.onpress)
-    
+
     pl.show()
-    
+
+
+def fsmovie(fn, mfn, vmin=None, vmax=None):
+    """
+    Make a video stepping through the Faraday depth axis of the cube.
+
+    Args:
+        fn: The file name of the source HDF5 file.
+        mfn: The movie file name.
+        vmin: The minimum of the color scale. [0]
+        vmax: The maximum of the color scale. [max of the cube]
+
+    Returns:
+        None
+    """
+
+    im_file = h5py.File(fn)
+
+    if vmin is None:
+        vmin = 0.
+    if vmax is None:
+        vmax = find_max(im_file[DATASET_STRING], abs)
+
+    nframes = im_file[DATASET_STRING].shape[0]
+
+    for i in range(nframes):
+
+        pl.figure()
+        pl.imshow(a[i, :, :], vmax=cube_max, vmin=cube_min)
+        pl.title('Frame = ' + str(minframe + i * framestep))
+        pl.colorbar()
+
+        if i > 0:
+            ndig = int(np.log10(i))
+        else:
+            ndig = 0
+        istr = str(i)
+        for j in range(3 - ndig):
+            istr = "0" + istr
+
+        fn_str = mfn + istr + ".png"
+        pl.savefig(fn_str)
+        pl.close()
+
+        progress(20, i + 1, len(a))
+
+    produce_avi(mfn, mfn + "_movie.avi")
+
+
+def produce_avi(fnbase, outfile):
+    """
+    """
+    results = sp.Popen(['ffmpeg', '-qscale', str(5), '-r', str(20), '-b',
+                        str(9600), '-i', fnbase + '%04d.png', outfile],
+                       stdout=sp.PIPE)
+    out = results.communicate()
+    if len(out[0]) != 0:
+        print out[0]
+
 
 def find_max(dset, func):
+    """
+    """
     vmax = None
     for i in range(dset.shape[0]):
-        if vmax is None or np.max(func(dset[i].flatten())) > vmax:
+        slice_max = np.max(func(dset[i].flatten()))
+        if vmax is None or slice_max > vmax:
             vmax = np.max(func(dset[i].flatten()))
     return vmax
-    
+
+
 def maxphiimage(fn, thresh):
     """
-    A routine for making an 
+    A routine for making an
     """
     pass
-    
-    
-    
-    
-    
+
+
+def progress(width, part, whole):
+    """
+    """
+
+    percent = float(part) / float(whole)
+    if percent > 1.:
+        percent == 1.
+
+    marks = int(width * (percent))
+    spaces = width - marks
+    loader = '[' + ('=' * marks) + (' ' * spaces) + ']'
+    #sys.stdout.write("%s %d/%d %d%%\r" % (loader, part, whole, percent*100))
+    sys.stdout.write("%s %d%%\r" % (loader, percent * 100.))
+    if percent >= 1:
+        sys.stdout.write("\n")
+    sys.stdout.flush()
