@@ -37,6 +37,7 @@ from pyrat import RAImage
 from pyrat.Constants import *
 import numpy as np
 import subprocess as sp
+from scipy.optimize import curve_fit
 
 cm = pl.cm.jet
 
@@ -202,6 +203,8 @@ def maxphiimage(fn, thresh):
             be blank.
     """
 
+    # TODO: Add the ability to threshold as a mult. of noise stdv
+
     im_file = h5py.File(fn)
     a = im_file[DATASET_STRING]
 
@@ -209,6 +212,7 @@ def maxphiimage(fn, thresh):
 
     mask = np.zeros(shape)
     rmmap = np.zeros(shape)
+    widmap = np.zeros(shape)
 
     myjet = pl.cm.jet
     myjet.set_bad('k')
@@ -216,24 +220,37 @@ def maxphiimage(fn, thresh):
     for i in range(shape[0]):
         imslice = a[:, i, :]
         for j in range(shape[1]):
-            maxval = max(abs(imslice[:, j]))
-            maxpix = np.argmax(abs(imslice[:, j]))
+            #maxval = max(abs(imslice[:, j]))
+            #maxpix = np.argmax(abs(imslice[:, j]))
 
-            if maxval < thresh:
+            los = imslice[:, j]
+            phimax, fwhm = find_peak(los, thresh)
+
+            if fwhm < 0:
                 mask[i, j] = 1
 
             rmmap[i, j] = ((maxpix - a.shape[0] / 2) *
                            im_file.attrs['cdelt'][0])
+            widmap[i, j] = fwhm * im_file.attrs['cdelt'][0]
 
         progress(20, i + 1, shape[0])
 
-    masked_array = np.ma.array(rmmap, mask=mask)
-    pl.imshow(masked_array, cmap=myjet)
+    maskedrm = np.ma.array(rmmap, mask=mask)
+    maskedwid = np.ma.array(widmap, mask=mask)
+
+    pl.figure()
+    pl.imshow(maskedrm, cmap=myjet)
     pl.title("RM Map (values in rad/m$^2$)")
     pl.colorbar()
     pl.show()
 
-    return rmmap, mask
+    pl.figure()
+    pl.imshow(maskedwid, cmap=myjet)
+    pl.title("Peak FWHM (values in rad/m$^2$)")
+    pl.colorbar()
+    pl.show()
+
+    return maskedrm, maskedwid
 
 
 def progress(width, part, whole):
@@ -252,3 +269,45 @@ def progress(width, part, whole):
     if percent >= 1:
         sys.stdout.write("\n")
     sys.stdout.flush()
+
+
+def find_peak(im, thresh):
+    """
+    Find max and argmax of an image with a single peak.
+
+    Args:
+        im: 1D Faraday spectrum image.
+
+    Returns:
+        xmax: location of maximum as a pixel number
+        pmax: polarized intensity at maximum
+        fwhm: fwhm of gaussian fit around maximum. Returns -1 if pmax is below
+            the threshold.
+    """
+
+    halfwidth = 2
+
+    loc = np.argmax(abs(im))
+    val = max(abs(im))
+
+    if val >= thresh:
+
+        popt, pconv = curve_fit(gaussian,
+                                np.arange(loc - halfwidth, loc + halfwidth),
+                                abs(im[loc - halfwidth:loc + halfwidth]),
+                                (val, loc, 4 * halfwidth))
+
+        xmax = popt[1]
+        fwhms = popt[2] * 2.3548
+    else:
+        return loc, val, -1.
+
+    return xmax, fwhms
+
+
+def gaussian(x, a, b, c):
+    """
+    """
+
+    val = a * np.exp(-(x - b) ** 2 / c ** 2)
+    return val
