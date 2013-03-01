@@ -178,6 +178,8 @@ class FSClean(object):
         self.sfnbase = os.path.join(self.pm.parset['scratch_dir'],
                                     os.path.basename(outfn_base))
 
+        self.m.set_logfile(self.ofnbase + ".log")
+
         imfn = self.ofnbase + '_im.hdf5'
         dbfn = self.ofnbase + '_db.hdf5'
 

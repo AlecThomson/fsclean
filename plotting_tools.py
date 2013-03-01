@@ -243,13 +243,13 @@ def maxphiimage(fn, thresh):
     maskedwid = np.ma.array(widmap, mask=mask)
 
     pl.figure()
-    pl.imshow(maskedrm, cmap=myjet)
+    pl.imshow(maskedrm, cmap=myjet, origin='lower')
     pl.title("RM Map (values in rad/m$^2$)")
     pl.colorbar()
     pl.show()
 
     pl.figure()
-    pl.imshow(maskedwid, cmap=myjet)
+    pl.imshow(maskedwid, cmap=myjet, origin='lower')
     pl.title("Peak FWHM (values in rad/m$^2$)")
     pl.colorbar()
     pl.show()
