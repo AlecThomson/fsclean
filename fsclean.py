@@ -397,6 +397,16 @@ class FSClean(object):
 
         self.m.header2("Started the Hogbom CLEAN routine...")
 
+        # Works fine
+        self.m.message("Computing dirty image...", 1)
+        vis.multiplywith(weights)  # vis now contains the weighted data!
+        vis.transform(im)
+        # im will contain the residual image going forward
+        im.multiplywith(self.K)
+
+        if not self.do_clean:
+            return None, None
+
         # contains the oversized dirty beam (8x larger than normal one by vol)
         self.m.message("Computing oversized dirty beam...", 1)
         grid_def = self.coords.grid_def
@@ -413,16 +423,6 @@ class FSClean(object):
         weights.transform(bigdb)
         Kbig = 1. / bigdb.find_max(abs)
         bigdb.multiplywith(Kbig)
-
-        # Works fine
-        self.m.message("Computing dirty image...", 1)
-        vis.multiplywith(weights)  # vis now contains the weighted data!
-        vis.transform(im)
-        # im will contain the residual image going forward
-        im.multiplywith(self.K)
-
-        if not self.do_clean:
-            return None, None
 
         # object for holding the model point source image
         pointim = FSCImage(self.sfnbase + '_pointim.hdf5',
