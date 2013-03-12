@@ -764,9 +764,10 @@ class FSClean(object):
 
         ln2 = 0.693147181
 
-        bmaj = self.pm.parset['bmaj']
-        bmin = self.pm.parset['bmin']
-        bphi = self.pm.parset['bphi']
+        # Convert arcsec to pixels which are used below
+        bmaj = self.pm.parset['bmaj'] / self.pm.parset['cellsize']
+        bmin = self.pm.parset['bmin'] / self.pm.parset['cellsize']
+        bphi = self.pm.parset['bphi'] / self.pm.parset['dphi']
 
         invsigmal2 = 8 * ln2 * bmaj ** -2.
         invsigmam2 = 8 * ln2 * bmin ** -2.

@@ -160,7 +160,7 @@ def fsmovie(fn, mfn, vmin=None, vmax=None):
         for j in range(3 - ndig):
             istr = "0" + istr
 
-        fn_str = mfn + istr + ".png"
+        fn_str = mfn + "_" + istr + ".png"
         pl.savefig(fn_str)
         pl.close()
 
@@ -296,10 +296,17 @@ def find_peak(im, thresh):
 
     if val >= thresh:
 
-        popt, pconv = curve_fit(gaussian,
+        try:
+            popt, pconv = curve_fit(gaussian,
                                 np.arange(loc - halfwidth, loc + halfwidth),
                                 abs(im[loc - halfwidth:loc + halfwidth]),
                                 (val, loc, 4 * halfwidth))
+        except ValueError:
+            pl.figure()
+            pl.plot(abs(im))
+            pl.show()
+            raw_input("error found, hit enter to quit")
+            raise
 
         xmax = popt[1]
         fwhms = popt[2] * 2.3548
