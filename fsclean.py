@@ -831,10 +831,9 @@ if __name__ == '__main__':
         "visibility data. Imaging is conducted using the Faraday " + \
         "synthesis technique (for details see Bell and Ensslin, 2012). " + \
         "Deconvolution is " + \
-        "carried out using a 3D Clark CLEAN algorithm. " + \
+        "carried out using a 3D CLEAN algorithm. " + \
         "Data is read from MeasurementSet files of the type used by CASA. " + \
-        "Images are written to HDF5 image files. See the README for info " + \
-        "about the image file format."
+        "Images are written to HDF5 image files."
 
     parser = OptionParser(usage="%prog <parset file> <in file> <out file>",
                           description=desc, version="%prog " + VERSION)

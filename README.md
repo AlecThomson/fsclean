@@ -18,6 +18,33 @@ Features include:
 
 For more information, see the Faraday synthesis paper [(Bell & Enßlin, 2012)](http://adsabs.harvard.edu/cgi-bin/bib_query?arXiv:1112.4175).
 
+Installation and Usage
+----------------------
+
+Prerequisites for fsclean
+  - python
+  - numpy
+  - matplotlib (for the plotting_tools.py module)
+  - h5py
+  - [pyrat](https://github.com/mrbell/pyrat)
+  - cython
+  - gsl
+
+Before one can use fsclean, some code needs to be compiled using the command
+
+   > python setup.py build_ext --inplace
+
+Usage instructions can be obtained by typing
+
+   > fsclean.py -h
+
+and a description of the parameter file options is given by typing
+  
+   > fsclean.py -p
+
+About fsclean
+-------------
+
 fsclean is licensed under the [GPLv3](http://www.gnu.org/licenses/gpl.html).
 
 fsclean has been developed at the Max Planck Institute for Astrophysics and 
