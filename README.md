@@ -25,7 +25,6 @@ Prerequisites for fsclean
   - python
   - numpy
   - matplotlib (for the plotting_tools.py module)
-  - h5py
   - [pyrat](https://github.com/mrbell/pyrat)
   - cython
   - gsl
@@ -33,6 +32,10 @@ Prerequisites for fsclean
 Before one can use fsclean, some code needs to be compiled using the command
 
    > python setup.py build_ext --inplace
+
+You may have to edit the include_gsl_dir and lib_gsl_dir variables within the
+setup.py file to point to the appropriate GSL header and library file 
+directories for your system.
 
 Usage instructions can be obtained by typing
 

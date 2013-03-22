@@ -37,8 +37,8 @@ written to FITS files.
 """
 
 # leave here while testing
-import sys
-sys.path.append('/home/mrbell/Work/code/')
+#import sys
+#sys.path.append('/home/mrbell/Work/code/')
 
 import os
 import datetime

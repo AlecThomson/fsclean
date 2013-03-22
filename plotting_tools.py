@@ -28,7 +28,7 @@ along with fsclean.  If not, see <http://www.gnu.org/licenses/>.
 
 # leave here while testing
 import sys
-sys.path.append('/home/mrbell/Work/code/')
+#sys.path.append('/home/mrbell/Work/code/')
 
 import pylab as pl
 #from matplotlib.widgets import Slider

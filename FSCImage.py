@@ -27,8 +27,8 @@ along with fsclean.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 # leave here while testing
-import sys
-sys.path.append('/home/mrbell/Work/code/')
+#import sys
+#sys.path.append('/home/mrbell/Work/code/')
 
 from pyrat.RAImage import Image as PI
 #from pyrat import RAData
