@@ -819,7 +819,7 @@ class FSClean(object):
             # there must be a better way...
             im.im[phi, m, l] = im.im[phi, m, l] + val
 
-if __name__ == '__main__':
+def main():
     """
     Handle all parsing here if started from the command line, then pass off to
     the main routine.
@@ -854,3 +854,6 @@ if __name__ == '__main__':
         pm.parse_file(args[0])
         fsc = FSClean(pm)
         fsc.run(args[1], args[2])
+
+if __name__ == '__main__':
+    main()
