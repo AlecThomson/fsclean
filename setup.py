@@ -12,4 +12,12 @@ ext = Extension("grid_tools", ["grid_tools.pyx"], include_dirs=
     [numpy.get_include(), include_gsl_dir], library_dirs=[lib_gsl_dir],
     libraries=["gsl", "gslcblas"])
 
-setup(ext_modules=[ext], cmdclass={'build_ext': build_ext})
+setup(
+    name='fsclean',
+    ext_modules=[ext], 
+    cmdclass={'build_ext': build_ext},
+    py_modules=['fsclean'],
+    entry_points={
+        'console_scripts': ['fsclean=fsclean:main'],
+    },
+)
