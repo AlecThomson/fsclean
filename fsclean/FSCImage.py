@@ -32,7 +32,7 @@ along with fsclean.  If not, see <http://www.gnu.org/licenses/>.
 
 from pyrat.RAImage import Image as PI
 #from pyrat import RAData
-import fsclean.FSCData as FD
+from . import fsclean.FSCData as FD
 import grid_tools
 import numpy as np
 
@@ -234,7 +234,7 @@ class FSCImage(PI):
         # degrid onto data vector one channel at a time
         self.m.message("Degridding data...", 2)
 
-        for i in data.iterkeys():
+        for i in data.keys():
             # get the l2 values stored within this spw
             l2vec = data.coords.get_freqs(i)
             nchan = len(l2vec)

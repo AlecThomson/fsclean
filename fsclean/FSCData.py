@@ -73,7 +73,7 @@ class FSCData(RAData.Data):
         ii = complex(0, 1)
 
         self.m.message("Gridding data...", 2)
-        for i in self.iterkeys():
+        for i in self.keys():
             # get the l2 values stored within this spw
             l2vec = self.coords.get_freqs(i)
             nchan = len(l2vec)
@@ -178,7 +178,7 @@ class FSCPolData(RAData.PolData):
         ii = complex(0, 1)
 
         self.m.message("Gridding data...", 2)
-        for i in self.iterkeys():
+        for i in self.keys():
             # get the l2 values stored within this spw
             l2vec = self.coords.get_freqs(i)
             nchan = len(l2vec)

@@ -45,9 +45,9 @@ import datetime
 import numpy as np
 from optparse import OptionParser
 
-from fsclean.FSCData import FSCData, FSCPolData
-from fsclean.FSCImage import FSCImage
-from fsclean.FSCleanPM import FSCleanPM
+from .fsclean.FSCData import FSCData, FSCPolData
+from .fsclean.FSCImage import FSCImage
+from .fsclean.FSCleanPM import FSCleanPM
 
 import pyrat.Messenger as M
 from pyrat.RAImage import GridParams
@@ -316,7 +316,7 @@ class FSClean(object):
 
             nchan = 0.
             val = 0.
-            for i in temp.iterkeys():
+            for i in temp.keys():
                 freqs = temp.coords.get_freqs(i)
                 for j in range(len(freqs)):
                     nchan += 1

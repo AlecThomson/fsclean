@@ -177,7 +177,7 @@ def produce_avi(fnbase, outfile):
                        stdout=sp.PIPE)
     out = results.communicate()
     if len(out[0]) != 0:
-        print out[0]
+        print(out[0])
 
 
 def find_max(dset, func):
@@ -305,7 +305,7 @@ def find_peak(im, thresh):
             pl.figure()
             pl.plot(abs(im))
             pl.show()
-            raw_input("error found, hit enter to quit")
+            input("error found, hit enter to quit")
             raise
 
         xmax = popt[1]
