@@ -32,7 +32,7 @@ along with fsclean.  If not, see <http://www.gnu.org/licenses/>.
 
 from pyrat.RAImage import Image as PI
 #from pyrat import RAData
-import FSCData as FD
+import fsclean.FSCData as FD
 import grid_tools
 import numpy as np
 
