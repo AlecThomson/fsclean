@@ -45,9 +45,9 @@ import datetime
 import numpy as np
 from optparse import OptionParser
 
-from .fsclean.FSCData import FSCData, FSCPolData
-from .fsclean.FSCImage import FSCImage
-from .fsclean.FSCleanPM import FSCleanPM
+from fsclean.FSCData import FSCData, FSCPolData
+from fsclean.FSCImage import FSCImage
+from fsclean.FSCleanPM import FSCleanPM
 
 import pyrat.Messenger as M
 from pyrat.RAImage import GridParams
