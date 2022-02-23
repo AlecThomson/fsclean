@@ -20,11 +20,9 @@ ext = Extension("grid_tools", ["fsclean/grid_tools.pyx"], include_dirs=
 
 setup(
     name='fsclean',
-    # ext_modules=[ext], 
     ext_modules = cythonize([ext]),
     cmdclass={'build_ext': build_ext},
     packages=find_packages(exclude=["tests", "*.tests", "*.tests.*", "tests.*"]),
-    # py_modules=['fsclean'],
     entry_points={
         'console_scripts': ['fsclean=fsclean.fsclean:main'],
     },
